@@ -1,13 +1,17 @@
 package br.com.matheushajer.dscatalog.resources;
 
+import java.net.URI;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.matheushajer.dscatalog.dto.CategoryDTO;
 import br.com.matheushajer.dscatalog.services.CategoryService;
@@ -27,6 +31,12 @@ public class CategoryResource {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
 		return ResponseEntity.ok().body(service.findById(id));
+	}
+	
+	@PostMapping
+	public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto){
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+		return ResponseEntity.created(uri).body(service.insert(dto));
 	}
 
 }
