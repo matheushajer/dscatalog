@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.matheushajer.dscatalog.services.exceptions.DataBaseException;
 import br.com.matheushajer.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
@@ -25,7 +26,20 @@ public class ResourceExceptionHandler {
 		err.setPath(request.getRequestURI());
 		
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
-
 	}
+	
+	@ExceptionHandler(DataBaseException.class)
+	public ResponseEntity<StandardError> database(DataBaseException exception, HttpServletRequest request){
+		StandardError err = new StandardError();
+		
+		err.setTimestamp(Instant.now());
+		err.setStatus(HttpStatus.BAD_REQUEST.value());
+		err.setError("Database exception");
+		err.setMessage(exception.getMessage());
+		err.setPath(request.getRequestURI());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
 	
 }
