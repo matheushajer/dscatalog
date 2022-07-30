@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 import br.com.matheushajer.dscatalog.entities.Category;
 import br.com.matheushajer.dscatalog.entities.Product;
@@ -43,9 +42,9 @@ public class ProductDTO implements Serializable {
 		this.date = entity.getDate();
 	}
 
-	public ProductDTO(Product entity, Set<Category> categories) {
+	public ProductDTO(Product entity, Collection<Category> collection) {
 		this(entity);
-		categories.forEach(category -> this.categories.add(new CategoryDTO(category)));
+		collection.forEach(category -> this.categories.add(new CategoryDTO(category)));
 	}
 
 	public Long getId() {
