@@ -13,7 +13,7 @@ public class ProductDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer id;
+	private Long id;
 	private String name;
 	private String description;
 	private Double price;
@@ -25,7 +25,7 @@ public class ProductDTO implements Serializable {
 	public ProductDTO() {
 	}
 
-	public ProductDTO(Integer id, String name, String description, Double price, String imgUrl, Instant date) {
+	public ProductDTO(Long id, String name, String description, Double price, String imgUrl, Instant date) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -48,11 +48,11 @@ public class ProductDTO implements Serializable {
 		categories.forEach(category -> this.categories.add(new CategoryDTO(category)));
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
