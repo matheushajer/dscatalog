@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +35,8 @@ public class UserService {
 	private BCryptPasswordEncoder encoder;
 
 	@Transactional(readOnly = true)
-	public Page<UserDTO> findAllPaged(PageRequest pageRequest) {
-		return repository.findAll(pageRequest).map(x -> new UserDTO(x));
+	public Page<UserDTO> findAllPaged(Pageable pageable) {
+		return repository.findAll(pageable).map(x -> new UserDTO(x));
 	}
 
 	@Transactional(readOnly = true)
