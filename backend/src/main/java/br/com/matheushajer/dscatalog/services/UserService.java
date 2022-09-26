@@ -9,11 +9,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.matheushajer.dscatalog.dto.RoleDTO;
 import br.com.matheushajer.dscatalog.dto.UserDTO;
+import br.com.matheushajer.dscatalog.dto.UserInsertDTO;
 import br.com.matheushajer.dscatalog.entities.User;
 import br.com.matheushajer.dscatalog.repositories.RoleRepository;
 import br.com.matheushajer.dscatalog.repositories.UserRepository;
@@ -25,10 +27,13 @@ public class UserService {
 
 	@Autowired
 	private UserRepository repository;
-	
+
 	@Autowired
 	private RoleRepository roleRepository;
 	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+
 	@Transactional(readOnly = true)
 	public Page<UserDTO> findAllPaged(PageRequest pageRequest) {
 		return repository.findAll(pageRequest).map(x -> new UserDTO(x));
@@ -41,9 +46,10 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserDTO insert(UserDTO dto) {
+	public UserDTO insert(UserInsertDTO dto) {
 		User entity = new User();
 		copyDtoToEntity(dto, entity);
+		entity.setPassword(encoder.encode(dto.getPassword()));
 		return new UserDTO(repository.save(entity));
 	}
 
@@ -68,21 +74,18 @@ public class UserService {
 		}
 
 	}
-	
+
 	private void copyDtoToEntity(UserDTO dto, User entity) {
-		
+
 		entity.setFirstName(dto.getFirstName());
 		entity.setLastName(dto.getLastName());
 		entity.setEmail(dto.getEmail());
-		
-		
+
 		entity.getRoles().clear();
-		
-		for(RoleDTO role : dto.getRoles()) {
+
+		for (RoleDTO role : dto.getRoles()) {
 			entity.getRoles().add(roleRepository.getOne(role.getId()));
 		}
-		
 	}
 
-	
 }
